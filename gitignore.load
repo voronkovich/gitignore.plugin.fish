@@ -1,4 +1,4 @@
-set -l gitignore_templates (dirname (readlink -f $argv))
+set -g gitignore_templates (dirname (readlink -f $argv))
 
 function gi
     set -l template (find $gitignore_templates/templates -iname "$argv.gitignore")
@@ -20,5 +20,5 @@ end
 
 set -l completions (find $gitignore_templates/templates -type f -name "*.gitignore" | xargs basename -a | sed -e 's/.gitignore$//' -e 's/\(.*\)/\L\1/')
 
-complete -c gi -a "$completions"
+complete -x -c gi -a "$completions"
 complete -c gii -a "$completions"
