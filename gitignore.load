@@ -1,0 +1,24 @@
+set -l gitignore_templates (dirname (readlink -f $argv))
+
+function gi
+    set -l template (find $gitignore_templates/templates -iname "$argv.gitignore")
+    if not test -z $template
+        set -l comment (basename $template | sed -e 's/.gitignore$//')
+        echo "### $comment"
+        cat $template
+    end
+end
+
+function gii
+    set -l template (find $gitignore_templates/templates -iname "$argv.gitignore")
+    if not test -z $template
+        set -l comment (basename $template | sed -e 's/.gitignore$//')
+        echo "### $comment" >> .gitignore
+        cat $template >> .gitignore
+    end
+end
+
+set -l completions (find $gitignore_templates/templates -type f -name "*.gitignore" | xargs basename -a | sed -e 's/.gitignore$//' -e 's/\(.*\)/\L\1/')
+
+complete -c gi -a "$completions"
+complete -c gii -a "$completions"
