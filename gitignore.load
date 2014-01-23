@@ -1,20 +1,22 @@
 set -g gitignore_templates (dirname (readlink -f $argv))
 
-function gi
-    set -l template (find $gitignore_templates/templates -iname "$argv.gitignore")
-    if not test -z $template
-        set -l comment (basename $template | sed -e 's/.gitignore$//')
-        echo "### $comment"
-        cat $template
+function gi -d "Output gitignore rules for specified projects"
+    for template in $argv
+        get_gitignore_template $template
     end
 end
 
-function gii
-    set -l template (find $gitignore_templates/templates -iname "$argv.gitignore")
-    if not test -z $template
-        set -l comment (basename $template | sed -e 's/.gitignore$//')
-        echo "### $comment" >> .gitignore
-        cat $template >> .gitignore
+function gii -d "Create .gitignore for specified projects"
+    gi $argv >> .gitignore
+end
+
+function get_gitignore_template -a template
+    set -l file (find $gitignore_templates/templates -iname "$argv.gitignore")
+    if not test -z $file
+        set -l comment (basename $file | sed -e 's/.gitignore$//')
+        echo
+        echo "### $comment"
+        cat $file
     end
 end
 
